@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ThemeToggle } from './components/ThemeToggle';
 
 interface Todo {
   id: number;
@@ -40,11 +41,24 @@ export default function TodoApp() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-8">
+    <div 
+      className="min-h-screen p-8 transition-colors"
+      style={{ 
+        backgroundColor: 'var(--background)', 
+        color: 'var(--foreground)' 
+      }}
+    >
       <div className="max-w-md mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8 text-blue-400">
-          Todo App
-        </h1>
+        {/* Header with theme toggle */}
+        <div className="flex justify-between items-center mb-8">
+          <h1 
+            className="text-3xl font-bold"
+            style={{ color: 'var(--button-primary)' }}
+          >
+            Todo App
+          </h1>
+          <ThemeToggle />
+        </div>
         
         {/* Add Todo Input */}
         <div className="mb-6 flex gap-2">
@@ -54,11 +68,21 @@ export default function TodoApp() {
             onChange={(e) => setInputText(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Add a new task..."
-            className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white placeholder-gray-400"
+            className="flex-1 px-4 py-2 rounded-lg focus:outline-none transition-all duration-200"
+            style={{
+              backgroundColor: 'var(--input-bg)',
+              borderColor: 'var(--input-border)',
+              color: 'var(--foreground)',
+              border: '1px solid var(--input-border)'
+            }}
           />
           <button
             onClick={addTodo}
-            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors"
+            className="px-6 py-2 rounded-lg font-medium transition-colors hover:opacity-90"
+            style={{
+              backgroundColor: 'var(--button-primary)',
+              color: 'white'
+            }}
           >
             Add
           </button>
@@ -67,24 +91,31 @@ export default function TodoApp() {
         {/* Todo List */}
         <div className="space-y-2">
           {todos.length === 0 ? (
-            <p className="text-center text-gray-400 py-8">
+            <p 
+              className="text-center py-8"
+              style={{ color: 'var(--text-muted)' }}
+            >
               No tasks yet. Add one above!
             </p>
           ) : (
             todos.map(todo => (
               <div
                 key={todo.id}
-                className={`flex items-center gap-3 p-3 bg-gray-800 rounded-lg border border-gray-700 ${
+                className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
                   todo.completed ? 'opacity-60' : ''
                 }`}
+                style={{
+                  backgroundColor: 'var(--card-bg)',
+                  borderColor: 'var(--card-border)'
+                }}
               >
                 <button
                   onClick={() => toggleTodo(todo.id)}
-                  className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                    todo.completed
-                      ? 'bg-green-600 border-green-600'
-                      : 'border-gray-500 hover:border-green-500'
-                  }`}
+                  className="w-5 h-5 rounded border-2 flex items-center justify-center transition-colors"
+                  style={{
+                    backgroundColor: todo.completed ? 'var(--success)' : 'transparent',
+                    borderColor: todo.completed ? 'var(--success)' : 'var(--text-muted)'
+                  }}
                 >
                   {todo.completed && (
                     <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -94,16 +125,18 @@ export default function TodoApp() {
                 </button>
                 
                 <span
-                  className={`flex-1 ${
-                    todo.completed ? 'line-through text-gray-500' : 'text-white'
-                  }`}
+                  className={`flex-1 ${todo.completed ? 'line-through' : ''}`}
+                  style={{
+                    color: todo.completed ? 'var(--text-muted)' : 'var(--foreground)'
+                  }}
                 >
                   {todo.text}
                 </span>
                 
                 <button
                   onClick={() => deleteTodo(todo.id)}
-                  className="text-red-400 hover:text-red-300 p-1"
+                  className="p-1 transition-colors hover:opacity-80"
+                  style={{ color: 'var(--danger)' }}
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -116,7 +149,10 @@ export default function TodoApp() {
 
         {/* Stats */}
         {todos.length > 0 && (
-          <div className="mt-6 text-center text-gray-400 text-sm">
+          <div 
+            className="mt-6 text-center text-sm"
+            style={{ color: 'var(--text-muted)' }}
+          >
             {todos.filter(todo => !todo.completed).length} of {todos.length} tasks remaining
           </div>
         )}
@@ -124,4 +160,13 @@ export default function TodoApp() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
 
